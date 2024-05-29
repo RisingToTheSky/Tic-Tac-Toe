@@ -1,4 +1,4 @@
-(function gameBoard () {
+const gameBoard = (function() {
     const board = [];
     const rows = 3;
     const columns = 3;
@@ -6,24 +6,41 @@
     for (let i = 0; i < columns; i++) {
         board[i] = [];
         for (let j = 0; j < rows; j++) {
-            board[i].push(Cell());
+            board[i].push("");
         }
     }
-    console.log(board);
+
+    // Place player icon on board
     return board;
 })();
+console.log(gameBoard);
 
-function Player() {
-    const players = [{
-        name: "Joshua", // prompt("Player 1!  Name:"),
-        icon: "X",
-    }, {
-        name: "Esther", // prompt("Player 2!  Name:"),
-        icon: "O",
-    }]
-    return players;
+function placeIcon(gameBoard, playerIcon) {
+    let choice;
+    let validChoice = false;
+    // Access gameBoard
+
+    // Access player Icon
+    while (!validChoice) {
+        choice = prompt("Give me a number between 1 and 9");
+        if (choice >= 1 && choice <= 9) {
+            let i = Math.floor((choice - 1) / 3);
+            let j = (choice - 1) % 3;
+            if (gameBoard[i][j] === "") {
+                gameBoard[i][j] = Player1().icon;
+                validChoice = true;
+            } else {
+                choice = prompt("Give me a number between 1 and 9")
+            }
+        }
+    }
 }
-console.log(Player());
+
+function Player1() {
+    const name = "Joshua";
+    const icon = "X";
+    return {name, icon};
+}
 
 function Game() {
 
