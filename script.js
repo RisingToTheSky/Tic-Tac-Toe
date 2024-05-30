@@ -50,11 +50,17 @@ function changeTurn() {
     for (let i = 0; i < 9; i++) {
         if (turn === 0) {
             placeIcon(gameBoard, Player1().icon);
-            console.log(checkWinner(gameBoard, Player1().icon));
+            if (checkWinner(gameBoard, Player1().icon) === true) {
+                console.log(`${Player1().name} wins!`);
+                break;
+            };
             turn++;
         } else if (turn === 1) {
             placeIcon(gameBoard, Player2().icon);
-            console.log(checkWinner(gameBoard, Player2().icon));
+            if (checkWinner(gameBoard, Player2().icon) === true) {
+                console.log(`${Player2().name} wins!`);
+                break;
+            };
             turn--;
         }
     }
@@ -71,20 +77,21 @@ function checkWinner(gameBoard, playerIcon) {
         [0, 4, 8],
         [2, 4, 6],
     ];
+    const flatBoard = gameBoard.flat();
 
     for (let combination of winningCombinations) {
         let win = true;
         for (let index of combination) {
-            if (gameBoard[index] !== playerIcon) {
+            if (flatBoard[index] !== playerIcon) {
                 win = false;
                 break;
             }
         }
         if (win) {
-            return `${playerIcon} is the winner!`;
+            return true;
         }
     }
-    return "The players tied!";
+    return false;
 }
 
 // A display controller is for DOM
