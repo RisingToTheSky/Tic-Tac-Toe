@@ -32,7 +32,6 @@ function placeIcon(gameBoard, playerIcon) {
 
     while (!validChoice) {
         choice = prompt("Give me a number between 1 and 9");
-        console.log(choice);
         if (choice >= 1 && choice <= 9) {
             let i = Math.floor((choice - 1) / 3);
             let j = (choice - 1) % 3;
@@ -48,17 +47,50 @@ function placeIcon(gameBoard, playerIcon) {
 
 function changeTurn() {
     let turn = 0;
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 9; i++) {
         if (turn === 0) {
             placeIcon(gameBoard, Player1().icon);
+            console.log(checkWinner(gameBoard, Player1().icon));
             turn++;
         } else if (turn === 1) {
             placeIcon(gameBoard, Player2().icon);
+            console.log(checkWinner(gameBoard, Player2().icon));
             turn--;
         }
     }
 }
 
+function checkWinner(gameBoard, playerIcon) {
+    const winningCombinations = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6],
+    ];
+
+    for (let combination of winningCombinations) {
+        let win = true;
+        for (let index of combination) {
+            if (gameBoard[index] !== playerIcon) {
+                win = false;
+                break;
+            }
+        }
+        if (win) {
+            return `${playerIcon} is the winner!`;
+        }
+    }
+    return "The players tied!";
+}
+
+// A display controller is for DOM
+
+
+// Game for winning combinations, changing turns, winner check
 function Game() {
 
 }
