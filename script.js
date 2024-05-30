@@ -1,3 +1,15 @@
+function Player1() {
+    const name = "Joshua";
+    const icon = "X";
+    return {name, icon};
+}
+
+function Player2() {
+    const name = "Esther";
+    const icon = "O";
+    return {name, icon};
+}
+
 const gameBoard = (function() {
     const board = [];
     const rows = 3;
@@ -9,8 +21,7 @@ const gameBoard = (function() {
             board[i].push("");
         }
     }
-
-    // Place player icon on board
+    
     return board;
 })();
 console.log(gameBoard);
@@ -18,16 +29,15 @@ console.log(gameBoard);
 function placeIcon(gameBoard, playerIcon) {
     let choice;
     let validChoice = false;
-    // Access gameBoard
 
-    // Access player Icon
     while (!validChoice) {
         choice = prompt("Give me a number between 1 and 9");
+        console.log(choice);
         if (choice >= 1 && choice <= 9) {
             let i = Math.floor((choice - 1) / 3);
             let j = (choice - 1) % 3;
             if (gameBoard[i][j] === "") {
-                gameBoard[i][j] = Player1().icon;
+                gameBoard[i][j] = playerIcon;
                 validChoice = true;
             } else {
                 choice = prompt("Give me a number between 1 and 9")
@@ -36,10 +46,17 @@ function placeIcon(gameBoard, playerIcon) {
     }
 }
 
-function Player1() {
-    const name = "Joshua";
-    const icon = "X";
-    return {name, icon};
+function changeTurn() {
+    let turn = 0;
+    for (let i = 0; i < 5; i++) {
+        if (turn === 0) {
+            placeIcon(gameBoard, Player1().icon);
+            turn++;
+        } else if (turn === 1) {
+            placeIcon(gameBoard, Player2().icon);
+            turn--;
+        }
+    }
 }
 
 function Game() {
