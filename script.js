@@ -26,7 +26,7 @@ const gameBoard = (function() {
 })();
 console.log(gameBoard);
 
-// A display controller is for DOM
+// A display controller is for the DOM
 
 // Game for winning combinations, changing turns, winner check
 const Game = (function () {
@@ -56,22 +56,21 @@ const Game = (function () {
                 placeIcon(gameBoard, Player1().icon);
                 if (checkWinner(gameBoard, Player1().icon) === true) {
                     console.log(`${Player1().name} wins!`);
-                    resetBoard(gameBoard);
+                    newGame();
+                    console.log(gameBoard);
                     break;
-                };
+                }
                 turn++;
             } else if (turn === 1) {
                 placeIcon(gameBoard, Player2().icon);
                 if (checkWinner(gameBoard, Player2().icon) === true) {
                     console.log(`${Player2().name} wins!`);
-                    resetBoard(gameBoard);
+                    newGame();
+                    console.log(gameBoard);
                     break;
-                };
+                } 
                 turn--;
-            } else {
-                console.log("Players tied!");
-                resetBoard(gameBoard);
-            }
+            } 
         }
     }
     
@@ -109,6 +108,14 @@ const Game = (function () {
             for (let j = 0; j < 3; j++) {
                 gameBoard[i].push("");
             }
+        }
+    }
+
+    function newGame() {
+        let newChoice = prompt("Do you want to play again?");
+        if (newChoice === "yes") {
+            resetBoard(gameBoard);
+            changeTurn();
         }
     }
     changeTurn();
