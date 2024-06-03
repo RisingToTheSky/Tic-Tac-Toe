@@ -72,6 +72,10 @@ const Game = (function () {
                 turn--;
             } 
         }
+        if (checkWinner(gameBoard, Player1().icon) === false && checkWinner(gameBoard, Player2().icon) === false) {
+            console.log("Players tied!");
+            newGame();
+        }
     }
     
     function checkWinner(gameBoard, playerIcon) {
