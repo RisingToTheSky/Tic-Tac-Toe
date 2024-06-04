@@ -28,9 +28,11 @@ console.log(gameBoard);
 
 // Game for winning combinations, changing turns, winner check
 const Game = (function () {
+    let turnCount = 0;
     let currentPlayer = Player2().icon;
     function changeTurn() {
         currentPlayer = currentPlayer === Player1().icon ? Player2().icon : Player1().icon;
+        turnCount++;
         return currentPlayer;
     }
 
@@ -59,7 +61,9 @@ const Game = (function () {
                 return true;
             }
         }
-        return false;
+        if (turnCount === 9) {
+            return false;
+        }
     }
 
     function restartBoard(gameBoard) {
@@ -74,7 +78,9 @@ const Game = (function () {
     function newGame() {
         restartBoard(gameBoard);
         changeTurn();
+        turnCount = 0;
     }
+
     return {changeTurn, checkWinner, newGame};
 })();
 
@@ -92,20 +98,32 @@ const displayController = (function () {
 
     // Event listener for cell buttons
     const cells = document.querySelectorAll(".cell");
-    cells.forEach((cell) => {
+    const restart = document.querySelector(".restart");
+    const turn = document.querySelector(".turn");
+    const winner = document.querySelector(".winner");
+    cells.forEach((cell, index) => {
+        const col = index % 3;
+        const row = Math.floor (index/ 3);
+
         cell.addEventListener("click", () => {
             if (cell.textContent === "") {
                 cell.textContent = Game.changeTurn();
+                gameBoard[row][col] = cell.textContent;
+                if (Game.checkWinner(gameBoard, Player1().icon) === true) {
+                    winner.textContent = `${Player1().name} is the winner!`;
+                } else if (Game.checkWinner(gameBoard, Player2().icon) === true) {
+                    winner.textContent = `${Player2().name} is the winner!`;
+                } else if (Game.checkWinner(gameBoard, Player1().icon) === false && Game.checkWinner(gameBoard, Player2().icon) === false) {
+                    winner.textContent = "Players tied!";
+                }
             }
-        });
-    })
-
-    // Event listener for restart button
-    const restart = document.querySelector(".restart");
-    restart.addEventListener("click", () => {
-        cells.forEach((cell) => {
+        })
+        // Event listener for restart button
+        restart.addEventListener("click", () => {
             cell.textContent = "";
             Game.newGame();
+
+            winner.textContent = "";
         })
     })
 })();
