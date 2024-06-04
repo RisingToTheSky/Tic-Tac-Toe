@@ -26,58 +26,14 @@ const gameBoard = (function() {
 })();
 console.log(gameBoard);
 
-// A display controller is for the DOM
-
 // Game for winning combinations, changing turns, winner check
 const Game = (function () {
-    function placeIcon(gameBoard, playerIcon) {
-        let choice;
-        let validChoice = false;
-    
-        while (!validChoice) {
-            choice = prompt("Give me a number between 1 and 9");
-            if (choice >= 1 && choice <= 9) {
-                let i = Math.floor((choice - 1) / 3);
-                let j = (choice - 1) % 3;
-                if (gameBoard[i][j] === "") {
-                    gameBoard[i][j] = playerIcon;
-                    validChoice = true;
-                } else {
-                    choice = prompt("Give me a number between 1 and 9")
-                }
-            }
-        }
-    }
-    
+    let currentPlayer = Player2().icon;
     function changeTurn() {
-        let turn = 0;
-        for (let i = 0; i < 9; i++) {
-            if (turn === 0) {
-                placeIcon(gameBoard, Player1().icon);
-                if (checkWinner(gameBoard, Player1().icon) === true) {
-                    console.log(`${Player1().name} wins!`);
-                    newGame();
-                    console.log(gameBoard);
-                    break;
-                }
-                turn++;
-            } else if (turn === 1) {
-                placeIcon(gameBoard, Player2().icon);
-                if (checkWinner(gameBoard, Player2().icon) === true) {
-                    console.log(`${Player2().name} wins!`);
-                    newGame();
-                    console.log(gameBoard);
-                    break;
-                } 
-                turn--;
-            } 
-        }
-        if (checkWinner(gameBoard, Player1().icon) === false && checkWinner(gameBoard, Player2().icon) === false) {
-            console.log("Players tied!");
-            newGame();
-        }
+        currentPlayer = currentPlayer === Player1().icon ? Player2().icon : Player1().icon;
+        return currentPlayer;
     }
-    
+
     function checkWinner(gameBoard, playerIcon) {
         const winningCombinations = [
             [0, 1, 2],
@@ -106,7 +62,7 @@ const Game = (function () {
         return false;
     }
 
-    function resetBoard(gameBoard) {
+    function restartBoard(gameBoard) {
         for (let i = 0; i < 3; i++) {
             gameBoard[i] = [];
             for (let j = 0; j < 3; j++) {
@@ -116,11 +72,40 @@ const Game = (function () {
     }
 
     function newGame() {
-        let newChoice = prompt("Do you want to play again?");
-        if (newChoice === "yes") {
-            resetBoard(gameBoard);
-            changeTurn();
-        }
+        restartBoard(gameBoard);
+        changeTurn();
     }
-    changeTurn();
+    return {changeTurn, checkWinner, newGame};
+})();
+
+// Display controller
+const displayController = (function () {
+    // Render board
+    const boardDiv = document.querySelector(".container");
+    gameBoard.forEach(row => {
+        row.forEach(() => {
+            const cellButton = document.createElement("button");
+            cellButton.classList.add("cell");
+            boardDiv.appendChild(cellButton);
+        })
+    })
+
+    // Event listener for cell buttons
+    const cells = document.querySelectorAll(".cell");
+    cells.forEach((cell) => {
+        cell.addEventListener("click", () => {
+            if (cell.textContent === "") {
+                cell.textContent = Game.changeTurn();
+            }
+        });
+    })
+
+    // Event listener for restart button
+    const restart = document.querySelector(".restart");
+    restart.addEventListener("click", () => {
+        cells.forEach((cell) => {
+            cell.textContent = "";
+            Game.newGame();
+        })
+    })
 })();
