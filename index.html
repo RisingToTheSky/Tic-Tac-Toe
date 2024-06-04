@@ -8,22 +8,32 @@
     <script src="script.js" defer></script>
 </head>
 <body>
-    <h1>Tic Tac Toe</h1>
-    <div class="container hidden">
-        <div class="cells">
-    
-        </div>
-        <div class="turn"></div>
-        <div class="winner"></div>
-        <button class="restart">Restart</button>
-        <button class="reset">Reset Names</button>
+    <div class="header">
+        <h1>Tic Tac Toe</h1>
     </div>
-    <form>
-        <label for="Player1">Player 1 (X)</label>
-        <input type="text" name="Player1" id="Player1">
-        <label for="Player2">Player 2 (O)</label>
-        <input type="text" name="Player2" id="Player2">
-        <button class="start" type="submit">Start Game</button>
-    </form>
+    <div class="main">
+        <div class="container hidden">
+            <div class="cells">
+        
+            </div>
+            <div class="turn"></div>
+            <div class="winner"></div>
+            <button class="restart">Restart</button>
+            <button class="reset">Reset Names</button>
+        </div>
+        <form>
+            <div>
+                <h2>Enter player info: </h2>
+                <label for="Player1">Player 1 (X)</label>
+                <input type="text" name="Player1" id="Player1" value="X">
+                <label for="Player2">Player 2 (O)</label>
+                <input type="text" name="Player2" id="Player2" value="O">
+            </div>
+            <button class="start" type="submit">Start Game</button>
+        </form>
+    </div>
+    <div class="footer">
+        <h3>Made by:<span><img src="icons/icon.svg" alt="Github icon"><a href="http://github.com/RisingToTheSky/Tic-Tac-Toe" target="_blank">RisingToTheSky</a></span></h3>
+    </div>
 </body>
 </html>
