@@ -1,11 +1,11 @@
 function Player1() {
-    const name = "Player 1";
+    const name = document.getElementById("Player1").value;
     const icon = "X";
     return {name, icon};
 }
 
 function Player2() {
-    const name = "Player 2";
+    const name = document.getElementById("Player2").value;
     const icon = "O";
     return {name, icon};
 }
@@ -29,8 +29,11 @@ const gameBoard = (function() {
 const Game = (function () {
     let turnCount = 0;
     let currentPlayer = Player1().icon;
+    let gameOver = false;
 
     function changeTurn() {
+        if (gameOver) return;
+
         if (turnCount === 0) {
             currentPlayer = Player1().icon;
             turnCount++;
@@ -64,10 +67,12 @@ const Game = (function () {
                 }
             }
             if (win) {
+                gameOver = true;
                 return true;
             }
         }
         if (turnCount === 9) {
+            gameOver = true;
             return false;
         }
     }
@@ -84,6 +89,7 @@ const Game = (function () {
     function newGame() {
         restartBoard(gameBoard);
         turnCount = 0;
+        gameOver = false;
     }
     
     return {changeTurn, checkWinner, newGame, turnCount};
@@ -91,8 +97,26 @@ const Game = (function () {
 
 // Display controller
 const displayController = (function () {
+    // Show board after submitting player names
+    const container = document.querySelector(".container");
+    const start = document.querySelector(".start");
+    const form = document.querySelector("form");
+    const reset = document.querySelector(".reset")
+
+    start.addEventListener("click", (e) => {
+        container.classList.remove("hidden");
+        form.classList.add("hidden");
+        e.preventDefault();
+    })
+    
+    // Event listener for reset button
+    reset.addEventListener("click", (e) => {
+        container.classList.add("hidden");
+        form.classList.remove("hidden");
+    })
+
     // Render board
-    const boardDiv = document.querySelector(".container");
+    const boardDiv = document.querySelector(".cells");
     gameBoard.forEach(row => {
         row.forEach(() => {
             const cellButton = document.createElement("button");
@@ -107,7 +131,7 @@ const displayController = (function () {
     const turn = document.querySelector(".turn");
     const winner = document.querySelector(".winner");
 
-    turn.textContent = `${Player1().name} begins`;
+    turn.textContent = "X begins";
     cells.forEach((cell, index) => {
         const col = index % 3;
         const row = Math.floor (index / 3);
