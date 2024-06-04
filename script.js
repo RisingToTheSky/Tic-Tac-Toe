@@ -24,16 +24,22 @@ const gameBoard = (function() {
     
     return board;
 })();
-console.log(gameBoard);
 
 // Game for winning combinations, changing turns, winner check
 const Game = (function () {
     let turnCount = 0;
-    let currentPlayer = Player2().icon;
+    let currentPlayer = Player1().icon;
+
     function changeTurn() {
-        currentPlayer = currentPlayer === Player1().icon ? Player2().icon : Player1().icon;
-        turnCount++;
-        return currentPlayer;
+        if (turnCount === 0) {
+            currentPlayer = Player1().icon;
+            turnCount++;
+            return currentPlayer;
+        } else {
+            currentPlayer = currentPlayer === Player1().icon ? Player2().icon : Player1().icon;
+            turnCount++;
+            return currentPlayer;
+        }
     }
 
     function checkWinner(gameBoard, playerIcon) {
@@ -77,11 +83,10 @@ const Game = (function () {
 
     function newGame() {
         restartBoard(gameBoard);
-        changeTurn();
         turnCount = 0;
     }
-
-    return {changeTurn, checkWinner, newGame};
+    
+    return {changeTurn, checkWinner, newGame, turnCount};
 })();
 
 // Display controller
@@ -101,20 +106,32 @@ const displayController = (function () {
     const restart = document.querySelector(".restart");
     const turn = document.querySelector(".turn");
     const winner = document.querySelector(".winner");
+
+    turn.textContent = `${Player1().name} begins`;
     cells.forEach((cell, index) => {
         const col = index % 3;
-        const row = Math.floor (index/ 3);
+        const row = Math.floor (index / 3);
 
         cell.addEventListener("click", () => {
             if (cell.textContent === "") {
                 cell.textContent = Game.changeTurn();
                 gameBoard[row][col] = cell.textContent;
+                if (Game.turnCount % 2 !== 0) {
+                    turn.textContent = `${Player1().name}'s turn`;
+                    Game.turnCount++;
+                } else {
+                    turn.textContent = `${Player2().name}'s turn`;
+                    Game.turnCount++;
+                }
                 if (Game.checkWinner(gameBoard, Player1().icon) === true) {
                     winner.textContent = `${Player1().name} is the winner!`;
+                    turn.textContent = "";
                 } else if (Game.checkWinner(gameBoard, Player2().icon) === true) {
                     winner.textContent = `${Player2().name} is the winner!`;
+                    turn.textContent = "";
                 } else if (Game.checkWinner(gameBoard, Player1().icon) === false && Game.checkWinner(gameBoard, Player2().icon) === false) {
                     winner.textContent = "Players tied!";
+                    turn.textContent = "";
                 }
             }
         })
@@ -122,8 +139,9 @@ const displayController = (function () {
         restart.addEventListener("click", () => {
             cell.textContent = "";
             Game.newGame();
-
             winner.textContent = "";
+            Game.turnCount = 0;
+            turn.textContent = `${Player1().name} begins`;
         })
     })
 })();
